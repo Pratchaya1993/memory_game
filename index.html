@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงเวลาการทำงาน</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #87CEEB, #FFE4B5);
+            color: #333;
+        }
+
+        .container {
+            text-align: center;
+            border: 3px solid #FF4500;
+            border-radius: 15px;
+            padding: 20px;
+            background-color: #FFF8DC;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .time-display {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #FF4500;
+        }
+
+        .label {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid #FF6347;
+            border-radius: 5px;
+        }
+
+        .button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #FF4500;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: #CD3700;
+        }
+
+        .button-secondary {
+            background-color: #6c757d;
+        }
+
+        .button-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .summary-page {
+            display: none;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .summary-table th, .summary-table td {
+            border: 1px solid #FF4500;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .summary-table th {
+            background-color: #FF6347;
+            color: #fff;
+        }
+    </style>
+    <script>
+        function updateTime() {
+            const timeDisplay = document.querySelector('.time-display');
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = (hours % 12 || 12).toString().padStart(2, '0');
+            timeDisplay.textContent = `${displayHours}:${minutes}:${seconds} ${ampm}`;
+        }
+
+        function goToSummary() {
+            const employeeId = document.getElementById('employee-id').value;
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = (hours % 12 || 12).toString().padStart(2, '0');
+            const currentTime = `${displayHours}:${minutes} ${ampm}`;
+
+            document.querySelector('.summary-page tbody').innerHTML = `
+                <tr>
+                    <td>${employeeId || 'ไม่ระบุ'}</td>
+                    <td>${currentTime}</td>
+                </tr>
+            `;
+
+            document.querySelector('.main-page').style.display = 'none';
+            document.querySelector('.summary-page').style.display = 'block';
+        }
+
+        function goBack() {
+            document.querySelector('.summary-page').style.display = 'none';
+            document.querySelector('.main-page').style.display = 'block';
+        }
+
+        setInterval(updateTime, 1000);
+        window.onload = updateTime;
+    </script>
+</head>
+<body>
+    <div class="main-page container">
+        <div class="time-display">08:15 AM.</div>
+        <label class="label" for="employee-id">กรอกรหัสพนักงาน</label>
+        <input type="text" id="employee-id" class="input-box" placeholder="รหัสพนักงาน">
+        <button class="button" onclick="goToSummary()">ลงเวลา</button>
+        <button class="button button-secondary">ย้อนกลับ</button>
+    </div>
+
+    <div class="summary-page container">
+        <h2>สรุปการลงเวลา</h2>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>รหัสพนักงาน</th>
+                    <th>เวลา</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- รายการลงเวลาจะแสดงที่นี่ -->
+            </tbody>
+        </table>
+        <button class="button" onclick="goBack()">ย้อนกลับ</button>
+    </div>
+</body>
+</html>
